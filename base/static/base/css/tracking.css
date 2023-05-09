@@ -18,6 +18,7 @@ header{
 }
 .links{
     width: 50%;
+    
 }
 .links nav{
     display: flex;
@@ -30,7 +31,9 @@ header{
     color: white;
     margin: 20px; 
     transition: all 1s ease-in-out;
-    
-
+}
+.links nav a:hover{
+    color: red;
+    border-bottom: 1px solid red;
 }
 
