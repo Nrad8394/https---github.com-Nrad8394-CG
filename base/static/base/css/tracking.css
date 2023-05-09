@@ -1,0 +1,14 @@
+*{
+    margin: 0%;
+    padding: 0%;
+}
+.links{
+    margin-left: 50%;
+    margin-top: 20px;
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    position: relative;
+}
+
