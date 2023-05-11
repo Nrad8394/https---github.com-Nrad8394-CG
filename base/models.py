@@ -1,24 +1,52 @@
+from click import Group
 from django.db import models
 import uuid
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-class items(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+
+class CustomUser(AbstractUser):
+    user_id = models.IntegerField(null=True, blank=True)
+   
+class Item(models.Model):
+    id = models.AutoField(primary_key=True)
+    item_name = models.CharField(max_length=100)
+    specification = models.TextField()
+    item_id = models.IntegerField(null=True, blank=True,unique=True)
+    objects = models.Manager()
 
     def __str__(self):
-        return self.name
-    
-class transfer(models.Model):
-    item = models.ForeignKey(items, on_delete=models.CASCADE)
-    source = models.CharField(max_length=100)
-    destination = models.CharField(max_length=100)
-    time = models.DateTimeField(auto_now_add=True)
-    transfer_status = models.CharField(max_length=100)
-    unique_code = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+        return self.item_name
 
-    # def __str__(self):
-    #     return f"{self.item} - {self.transfer_status}"
-class delivery(models.Model):
-    code = models.ForeignKey()
+class Transporter(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    phone_number = models.IntegerField(default=0)
+    address = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    objects = models.Manager()
+
     
+class Order(models.Model):
+    id = models.AutoField(primary_key=True)
+    item = models.ForeignKey(Item, on_delete= models.CASCADE )
+    destination = models.IntegerField()
+    transporter = models.ForeignKey(Transporter, on_delete= models.CASCADE )
+    receiver_first_name = models.CharField(max_length=255)
+    receiver_last_name = models.CharField(max_length=255)
+    receiver_id_number = models.IntegerField(default=0)
+    receiver_confirmation = models.BooleanField(default=False)
+    objects = models.Manager()
+    
+@receiver(post_save, sender=CustomUser)
+def create_user_profile(sender, instance, created, **kwargs):
+    # if Created is true (Means Data Inserted)
+    if created: 
+        Transporter.objects.create(user=instance)
+@receiver(post_save, sender=CustomUser)
+def save_user_profile(sender, instance, **kwargs):
+    instance.transporter.save()
+           
