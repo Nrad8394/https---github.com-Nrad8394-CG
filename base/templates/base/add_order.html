@@ -52,6 +52,15 @@
 
                         <div class="card-body">
                             <div class="form-group">
+                                <label>Item </label>
+                                <select class="form-control" name="item_name">
+                                    {% for item in items %}
+                                        <option value="{{ item.id }}">{{ item.item_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
                                 <label>Destination </label>
                                 <input type="text" class="form-control" name="destination" placeholder="Destination">
                             </div>
@@ -67,27 +76,13 @@
                                 <label>Receiver Last Name</label>
                                 <input type="text" class="form-control" name="receiver_last_name" placeholder="Receiver Last Name">
                             </div>
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="receiver_confirmation" id="" value="checkedValue" unchecked>
-                                Receiver confirmation
-                              </label>
-                            </div>
+                            
 
-                            <div class="form-group">
-                                <label>Item </label>
-                                <select class="form-control" name="item_name">
-                                    {% for item in items %}
-                                        <option value="{{ item.id }}">{{ item.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-
-                            <div class="form-group">
+                             <div class="form-group">
                                 <label>Transporter</label>
                                 <select class="form-control" name="transporter">
                                     {% for transporter in transporters %}
-                                        <option value="{{ transporter.id }}">{{ transporter.first_name }} {{ transporter.last_name }}</option>
+                                        <option value="{{ transporter.id }}">{{ transporter.user.first_name }} {{ transporter.user.last_name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -96,7 +91,7 @@
                         <!-- /.card-body -->
 
                         <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Add Order</button>
+                        <button type="submit"  class="btn btn-primary">Add Order</button>
                         </div>
                     </form>
                     </div>

@@ -8,9 +8,11 @@ from .models import Item,Transporter,CustomUser,Order
 # Create your views here.
 def tracker(request):
         # will display all orders and their status
-        order = Order.objects.all()
+        orders = Order.objects.all()
+        
+        
         context = {
-                'order': order
+                'orders': orders
         }
         
         
@@ -65,8 +67,16 @@ def add_transporter_save(request):
             messages.error(request, "Failed to Add transporter!")
             return redirect('add_transporter')
     
-def add_order(request):     
-        return render(request,'base/add_order.html')
+def add_order(request): 
+        transporters = Transporter.objects.all()
+
+        items = Item.objects.all()
+        context = {
+                'transporters': transporters,
+                'items': items,
+        }    
+        return render(request,'base/add_order.html',context)
+
 def add_order_save(request):
         transporters = Transporter.objects.all()
         items = Item.objects.all()
@@ -76,25 +86,31 @@ def add_order_save(request):
         }
         if request.method != 'POST':
                 messages.error(request, 'Invalid Method')
-                return redirect('')
+                return redirect('add_order')
         else:
-                item_name = request.POST.get('item_name')
+                item_id= request.POST.get('item_name')
+                item = Item.objects.get(id=item_id)
+
                 destination = request.POST.get('destination')
-                transporter = request.POST.get('transporter')
+                transporter_id = request.POST.get('transporter')
+                transporter = CustomUser.objects.get(id=transporter_id)
+
                 receiver_first_name = request.POST.get('receiver_first_name')
                 receiver_last_name = request.POST.get('receiver_last_name')
                 receiver_id_number = request.POST.get('receiver_id_number')
                 receiver_confirmation = request.POST.get('receiver_confirmation')
         try:
-                add_order = Order(item_name=item_name,destination=destination,transporter=transporter,
+                add_order = Order(item_id=item,destination=destination,transporter_id=transporter,
                                   receiver_first_name=receiver_first_name,receiver_last_name=receiver_last_name
                                   ,receiver_id_number=receiver_id_number,receiver_confirmation=receiver_confirmation)
-                add_item.save()
+                
+                add_order.save()
                 messages.success(request, "Item Added.")
-                return redirect('')
-        except:
+                return redirect('add_order')
+        except Exception as e:
+                print(e)
                 messages.error(request, "Failed to Add Item.")
-                return redirect('')
+                return redirect('add_order')
 
          
 @csrf_exempt

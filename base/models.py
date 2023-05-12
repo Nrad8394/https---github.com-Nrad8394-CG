@@ -1,4 +1,4 @@
-from click import Group
+# from click import Group
 from django.db import models
 import uuid
 from django.dispatch import receiver
@@ -21,7 +21,7 @@ class Item(models.Model):
         return self.item_name
 
 class Transporter(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, unique=True)
     user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
     phone_number = models.IntegerField(default=0)
     address = models.TextField()
@@ -32,13 +32,13 @@ class Transporter(models.Model):
     
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
-    item = models.ForeignKey(Item, on_delete= models.CASCADE )
-    destination = models.IntegerField()
-    transporter = models.ForeignKey(Transporter, on_delete= models.CASCADE )
+    item_id = models.ForeignKey(Item, on_delete= models.CASCADE, default=1)
+    destination = models.CharField(max_length=100)
+    transporter_id = models.ForeignKey(CustomUser, on_delete= models.CASCADE, default=1)
     receiver_first_name = models.CharField(max_length=255)
     receiver_last_name = models.CharField(max_length=255)
     receiver_id_number = models.IntegerField(default=0)
-    receiver_confirmation = models.BooleanField(default=False)
+    receiver_confirmation = models.BooleanField(default=False, null=True)
     objects = models.Manager()
     
 @receiver(post_save, sender=CustomUser)
