@@ -40,6 +40,12 @@ class Order(models.Model):
     receiver_id_number = models.IntegerField(default=0)
     receiver_confirmation = models.BooleanField(default=False, null=True)
     objects = models.Manager()
+    unique_code = models.CharField(max_length=32, unique=True,default=0)
+
+    def save(self, *args, **kwargs):
+        if not self.unique_code:
+            self.unique_code = uuid.uuid4().hex[:8]  # Generate a unique 8-character code
+        super().save(*args, **kwargs)
     
 @receiver(post_save, sender=CustomUser)
 def create_user_profile(sender, instance, created, **kwargs):
