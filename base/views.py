@@ -12,7 +12,7 @@ from base.EmailBackEnd import EmailBackEnd
 
 
 # Create your views here.
-<<<<<<< HEAD
+
 def loginPage(request):
        return render(request,'login.html')
 def doLogin(request):
@@ -37,8 +37,6 @@ def get_user_details(request):
 def logout_user(request):
     logout(request)
     return HttpResponseRedirect('login')
-# 
-=======
 
 def login_view(request):
     if request.method == 'POST':
@@ -60,7 +58,6 @@ def login_view(request):
 
 
 
->>>>>>> 6ace7e30d60dfdd8b85b4b7738d55850c3c84458
 def tracker(request):
         # will display all orders and their status
         orders = Order.objects.all()

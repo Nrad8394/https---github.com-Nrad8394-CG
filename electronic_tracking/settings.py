@@ -51,12 +51,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-<<<<<<< HEAD
+
     
     'base.LoginCheckMiddleWare.LoginCheckMiddleWare',
-=======
-
->>>>>>> 6ace7e30d60dfdd8b85b4b7738d55850c3c84458
 ]
 
 ROOT_URLCONF = 'electronic_tracking.urls'
