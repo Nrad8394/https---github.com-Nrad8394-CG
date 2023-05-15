@@ -2,31 +2,42 @@
 
 {% block content %}
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 <body>
   <div class="container text-center d-flex">
-    <a href="{% url 'login' %}" class=" center-block display-1"><b>Ordering </b>Management System</a>
+    <a href="{% url 'login' %}" class=" center-block display-2 "><b>Ordering Management System </b></a>
   </div>
-  <form action="{% url 'doLogin' %}" method="POST">
+  <div class="container-fluid">
+   <form action="{% url 'login' %}" method="POST">
     {% csrf_token %}
     <div class=" input_box m-3">
-            <span class="fas fa-envelope">Email:</span>  
-
-      <input type="email"  name="email" required="required" >
+        <span class="fas fa-envelope">Email:</span>  
+ 
+        <input type="email"  name="email" required="required" >
     </div>
     <div class="input_box m-3">
-            <span class="fas fa-lock">Password:</span>
+        <span class="">Username:</span>
+        <input type="text" name="username" required="required">
+    </div>
+    <div class="input_box m-3">
+        <span class="fas fa-lock">Password:</span>
 
-      <input type="password" name="password" required="required">
+        <input type="password" name="password" required="required">
     </div>
     <div class="col-12">
       <button type="submit" class="btn btn-primary btn-block">Sign In</button>
     </div>
-    {% comment %} <div class="col-12 text-center">
+
+    
+
+    {% comment %} Display Messages {% endcomment %}
+    {% comment %} {% comment %} <div class="col-12 text-center">
       <a href="{% url 'password_reset' %}">Reset Password</a>
     </div>
       {% endcomment %}
 
-    {% comment %} Display Messages {% endcomment %}
+    {% comment %} Display Messages {% endcomment %} 
     {% if messages %}
     <div class="col-12">
       {% for message in messages %}
@@ -44,9 +55,13 @@
 
     <!-- /.col -->
   </div>
-</form>
+</form> 
+</div>
+  
 
-
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjS
 </body>
 
 {% endblock %}

@@ -3,55 +3,33 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
-from base.EmailBackEnd import EmailBackEnd
 
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Item,Transporter,CustomUser,Order
 
+
 # Create your views here.
-def loginPage(request):
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        user = authenticate(request, email=email, password=password)
+        
+        if user is not None:
+            login(request, user)
+            return redirect('base/add_order.html')  
+        else:
+            messages.error(request, 'Invalid username or password.')
+    
     return render(request, 'login.html')
 
-@csrf_protect
-def doLogin(request):
-    if request.method != "POST":
-        return HttpResponse("<h2>Method Not Allowed</h2>")
-    else:
-        user = EmailBackEnd.authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
-        if user != None:
-            login(request, user)
-            user_type = user.user_type
-            #return HttpResponse("Email: "+request.POST.get('email')+ " Password: "+request.POST.get('password'))
-            if user_type == '1':
-                return redirect('admin_dashboard')
-                
-            elif user_type == '2':
-                # return HttpResponse("Clerk Login")
-                return redirect('clerk_home')
-                
-            elif user_type == '3':
-                # return HttpResponse("Supplier Login")
-                return redirect('supplier_home')
-            else:
-                messages.error(request, "Invalid Login!")
-                return redirect('login')
-        else:
-            messages.error(request, "Invalid Login Credentials!")
-            #return HttpResponseRedirect("/")
-            return redirect('login')
 
-def get_user_details(request):
-    if request.user != None:
-        return HttpResponse("User: "+request.user.email+" User Type: "+request.user.user_type)
-    else:
-        return HttpResponse("Please Login First")
-    
-def logout_user(request):
-    logout(request)
-    return HttpResponseRedirect('/')
-def index(request):
-    return render(request, 'index.html')
+
+
+
 
 def tracker(request):
         # will display all orders and their status

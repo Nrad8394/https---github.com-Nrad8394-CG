@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = '/login.html/'
+LOGIN_REDIRECT_URL = '/base/templates/base/add_order.html'  # The URL where users are redirected after successful login
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -47,7 +50,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'base.LoginCheckMiddleWare.LoginCheckMiddleWare',
 
 ]
 
