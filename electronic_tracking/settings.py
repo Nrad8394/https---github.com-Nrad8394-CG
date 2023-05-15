@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'base.apps.BaseConfig'
+    'django_extensions',
+    'base.apps.BaseConfig',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +51,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+<<<<<<< HEAD
+    
+    'base.LoginCheckMiddleWare.LoginCheckMiddleWare',
+=======
 
+>>>>>>> 6ace7e30d60dfdd8b85b4b7738d55850c3c84458
 ]
 
 ROOT_URLCONF = 'electronic_tracking.urls'
@@ -85,7 +91,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'electronic_tracking',
         'USER': 'root',
-        'PASSWORD': 'cherry_jd8393',
+        'PASSWORD': 'benjamin8393',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -134,3 +140,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Registering Custom Backend "EmailBackEnd"
+AUTHENTICATION_BACKENDS = ['base.EmailBackEnd.EmailBackEnd']
+
