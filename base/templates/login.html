@@ -1,0 +1,122 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        *{
+            margin: 0%;
+            padding: 0%;
+            box-sizing: border-box;
+        
+        }
+        
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            gap: 30px;
+            background: #1d2b3a;
+        }
+        .input_box{
+            position: relative;
+            width: 250px;
+        
+        }
+        .input_box input{
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.25);
+            background: #1d2b3a;
+            border-radius: 5px;
+            outline: none;
+            color: #00dfc4;
+            font-size: 1em;
+            transition: 0.5s;
+        }
+        .input_box span{
+            position: absolute;
+            left: 0;
+            padding: 10px;
+            pointer-events: none;
+            font-size: 1em;
+            color: rgba(255,255,255,0.25);
+            text-transform: uppercase;
+            transition: 0.5s;
+        }
+        .input_box input:valid ~span,
+        .input_box input:focus ~span{
+            color: #00dfc4;
+            transform: translateX(10px) translateY(-7px);
+            font-size: 0.65em;
+            padding: 0 10px;
+            background: #1d2b3a;
+            border-left: 1px solid #00dfc4;
+            border-right: 1px solid #00dfc4;
+            letter-spacing: 0.2em;
+        
+        }
+        .input_box:nth-child(2) input:valid ~span,
+        .input_box:nth-child(2) input:focus ~span{
+            background-color: #00dfc4;
+            color: #1d2b3a;
+            border-radius: 2px;
+        }
+        .input_box input:valid ,
+        .input_box input:focus {
+            border: 1px solid #00dfc4;
+        }
+    </style>
+  </head>
+  <body>
+    <form action="{% url 'doLogin' %}" method="POST">
+        {% csrf_token %}
+        <div class="input_box p-2">
+            <input type="email" name="email" id="email" required="required"> 
+            <span>Email</span>
+        </div>
+        <div class="input_box p-2">
+            <input type="password" name="password" id="password" required="required">
+            <span>Password</span>
+        </div>
+        <div class="col-12 p-2">
+          <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+        </div>
+        {% comment %} Display Messages {% endcomment %}
+      {% if messages %}
+      <div class="col-12">
+        {% for message in messages %}
+          {% if message.tags == "error" %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </form>
+    
+    
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
+<body>
+
+
