@@ -1,11 +1,58 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseRedirect, HttpResponse
+from base.EmailBackEnd import EmailBackEnd
 
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+
 from .models import Item,Transporter,CustomUser,Order
 
 # Create your views here.
+def loginPage(request):
+    return render(request, 'login.html')
+
+@csrf_protect
+def doLogin(request):
+    if request.method != "POST":
+        return HttpResponse("<h2>Method Not Allowed</h2>")
+    else:
+        user = EmailBackEnd.authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
+        if user != None:
+            login(request, user)
+            user_type = user.user_type
+            #return HttpResponse("Email: "+request.POST.get('email')+ " Password: "+request.POST.get('password'))
+            if user_type == '1':
+                return redirect('admin_dashboard')
+                
+            elif user_type == '2':
+                # return HttpResponse("Clerk Login")
+                return redirect('clerk_home')
+                
+            elif user_type == '3':
+                # return HttpResponse("Supplier Login")
+                return redirect('supplier_home')
+            else:
+                messages.error(request, "Invalid Login!")
+                return redirect('login')
+        else:
+            messages.error(request, "Invalid Login Credentials!")
+            #return HttpResponseRedirect("/")
+            return redirect('login')
+
+def get_user_details(request):
+    if request.user != None:
+        return HttpResponse("User: "+request.user.email+" User Type: "+request.user.user_type)
+    else:
+        return HttpResponse("Please Login First")
+    
+def logout_user(request):
+    logout(request)
+    return HttpResponseRedirect('/')
+def index(request):
+    return render(request, 'index.html')
+
 def tracker(request):
         # will display all orders and their status
         orders = Order.objects.all()
@@ -105,11 +152,11 @@ def add_order_save(request):
                                   ,receiver_id_number=receiver_id_number,receiver_confirmation=receiver_confirmation)
                 
                 add_order.save()
-                messages.success(request, "Item Added.")
+                messages.success(request, "Order Added.")
                 return redirect('add_order')
         except Exception as e:
                 print(e)
-                messages.error(request, "Failed to Add Item.")
+                messages.error(request, "Failed to Add Order.")
                 return redirect('add_order')
 
          

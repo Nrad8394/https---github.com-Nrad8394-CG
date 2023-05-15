@@ -8,8 +8,18 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 class CustomUser(AbstractUser):
-    user_id = models.IntegerField(null=True, blank=True)
-   
+    user_type_data = ((1, "AdminManager"), (2, "Clerk"), (3, "Supplier"))
+    user_type = models.CharField(default=1, choices=user_type_data, max_length=10)
+
+
+
+class AdminManager(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
 class Item(models.Model):
     id = models.AutoField(primary_key=True)
     item_name = models.CharField(max_length=100)
