@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = '/login.html/'
+LOGIN_REDIRECT_URL = '/base/templates/base/add_order.html'  # The URL where users are redirected after successful login
 
 # Application definition
 
@@ -49,11 +51,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+<<<<<<< HEAD
     
     'base.LoginCheckMiddleWare.LoginCheckMiddleWare',
+=======
+
+>>>>>>> 6ace7e30d60dfdd8b85b4b7738d55850c3c84458
 ]
 
 ROOT_URLCONF = 'electronic_tracking.urls'
+
+
 
 TEMPLATES = [
     {

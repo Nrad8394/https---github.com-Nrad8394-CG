@@ -2,12 +2,17 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseRedirect, HttpResponse
 
 from django.views.decorators.csrf import csrf_exempt
+
 from .models import Item,Transporter,CustomUser,Order
 from base.EmailBackEnd import EmailBackEnd
 
+
 # Create your views here.
+<<<<<<< HEAD
 def loginPage(request):
        return render(request,'login.html')
 def doLogin(request):
@@ -33,6 +38,29 @@ def logout_user(request):
     logout(request)
     return HttpResponseRedirect('login')
 # 
+=======
+
+def login_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        user = authenticate(request, email=email, password=password)
+        
+        if user is not None:
+            login(request, user)
+            return redirect('base/add_order.html')  
+        else:
+            messages.error(request, 'Invalid username or password.')
+    
+    return render(request, 'login.html')
+
+
+
+
+
+
+>>>>>>> 6ace7e30d60dfdd8b85b4b7738d55850c3c84458
 def tracker(request):
         # will display all orders and their status
         orders = Order.objects.all()
@@ -132,11 +160,11 @@ def add_order_save(request):
                                   ,receiver_id_number=receiver_id_number,receiver_confirmation=receiver_confirmation)
                 
                 add_order.save()
-                messages.success(request, "Item Added.")
+                messages.success(request, "Order Added.")
                 return redirect('add_order')
         except Exception as e:
                 print(e)
-                messages.error(request, "Failed to Add Item.")
+                messages.error(request, "Failed to Add Order.")
                 return redirect('add_order')
 
          
