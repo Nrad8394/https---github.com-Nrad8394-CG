@@ -36,7 +36,7 @@ def get_user_details(request):
 
 def logout_user(request):
     logout(request)
-    return HttpResponseRedirect('login')
+    return HttpResponseRedirect('/')
 
 def login_view(request):
     if request.method == 'POST':
