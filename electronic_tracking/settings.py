@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = '/login.html/'
+LOGIN_REDIRECT_URL = '/base/templates/base/add_order.html'  # The URL where users are redirected after successful login
 
 # Application definition
 
@@ -37,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'base.apps.BaseConfig'
+    'django_extensions',
+    'base.apps.BaseConfig',
 ]
 
 MIDDLEWARE = [
@@ -48,9 +51,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+<<<<<<< HEAD
+    
+    'base.LoginCheckMiddleWare.LoginCheckMiddleWare',
+=======
+
+>>>>>>> 6ace7e30d60dfdd8b85b4b7738d55850c3c84458
 ]
 
 ROOT_URLCONF = 'electronic_tracking.urls'
+
+
 
 TEMPLATES = [
     {
@@ -76,11 +87,17 @@ WSGI_APPLICATION = 'electronic_tracking.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'electronic_tracking',
+        'USER': 'root',
+        'PASSWORD': 'benjamin8393',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
+#For Custom USER
+AUTH_USER_MODEL = "base.CustomUser"
 
 
 # Password validation
@@ -123,3 +140,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Registering Custom Backend "EmailBackEnd"
+AUTHENTICATION_BACKENDS = ['base.EmailBackEnd.EmailBackEnd']
+

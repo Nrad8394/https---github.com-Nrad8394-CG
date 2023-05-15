@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import items, transfer
+from .models import *
 # Register your models here.
-admin.site.register(items)
-admin.site.register(transfer)
+admin.site.register(Item)
+admin.site.register(Transporter)
+admin.site.register(Order)
+admin.site.register(CustomUser)
