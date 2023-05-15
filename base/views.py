@@ -6,6 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Item,Transporter,CustomUser,Order
 
 # Create your views here.
+def login(request):
+        return render(request,'login.html')
+def doLogin(request):
+        if request.method != "POST":
+                return HTTPResponse("<h2>Method not Allowed</h2>")
+        else:
+                user = authenticate()
 def tracker(request):
         # will display all orders and their status
         order = Order.objects.all()
