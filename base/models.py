@@ -12,7 +12,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 class CustomUser(AbstractUser):
     pass
+
     
+
 
 class Item(models.Model):
     id = models.AutoField(primary_key=True)
@@ -26,37 +28,32 @@ class Item(models.Model):
 
 class Transporter(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    user = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
-    phone_number = models.IntegerField(default=0)
-    address = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True) 
+    transporter_first_name = models.CharField(max_length=255,null=True)
+    transporter_last_name = models.CharField(max_length=255,null=True)
+    transporter_email_address = models.CharField(max_length=255, null=True)
+    transporter_phone_number = models.IntegerField(default=0)
+    transporter_address = models.TextField(null=True)
     objects = models.Manager()
 
-    
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
-    item_id = models.ForeignKey(Item, on_delete= models.CASCADE, default=1)
+    item_id = models.ForeignKey(Item, on_delete= models.CASCADE, null=True,default=None)
+    
     destination = models.CharField(max_length=100)
-    transporter_id = models.ForeignKey(CustomUser, on_delete= models.CASCADE, default=1)
     receiver_first_name = models.CharField(max_length=255)
     receiver_last_name = models.CharField(max_length=255)
-    receiver_id_number = models.IntegerField(default=0)
-    receiver_confirmation = models.BooleanField(default=False, null=True)
+    receiver_phone_number = models.IntegerField(null=True)
+    receiver_confirmation = models.BooleanField( null=True)
     objects = models.Manager()
-    unique_code = models.CharField(max_length=32, unique=True,default=0)
+    item_status = models.CharField(max_length=255)
+
+
+    unique_code = models.CharField(max_length=32, unique=True)
 
     def save(self, *args, **kwargs):
         if not self.unique_code:
             self.unique_code = uuid.uuid4().hex[:8]  # Generate a unique 8-character code
         super().save(*args, **kwargs)
     
-@receiver(post_save, sender=CustomUser)
-def create_user_profile(sender, instance, created, **kwargs):
-    # if Created is true (Means Data Inserted)
-    if created: 
-        Transporter.objects.create(user=instance)
-@receiver(post_save, sender=CustomUser)
-def save_user_profile(sender, instance, **kwargs):
-    instance.transporter.save()
+
            

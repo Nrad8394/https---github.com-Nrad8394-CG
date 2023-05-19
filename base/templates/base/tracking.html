@@ -15,10 +15,13 @@
                 <tr>
                     <th>Unique Code</th>
                     <th>Item name</th>
+                    <th>Item Status</th>
+
                     <th>Destination </th>
-                    <th>receiver_id_number</th>
-                    <th>receiver_confirmation</th>
-                    <th>actions</th>
+                    <th>Receiver Phone Number</th>
+                    <th>Receiver First Name</th>
+                    <th>Receiver Last Name</th>
+                    <th>Actions</th>
                     
     
                 </tr>
@@ -33,23 +36,33 @@
                             {{ order.item_id }}
                         </td>
                         <td>
+                            {{ order.item_status }}
+                        </td>
+                        <td>
                             {{ order.destination }}
                         </td>
                         <td>
-                           {{ order.receiver_id_number }}
+                            {{ order.receiver_phone_number }}
+                         </td>
+                       
+                        <td>
+                            {{ order.receiver_first_name }}
                         </td>
                         <td>
-                            {{ order.receiver_confirmation }}
+                            {{ order.receiver_last_name }}
                         </td>
+                        
+                        
+
+                        
         
                         <td>
                             <div class="row ">
-                                <button type="button" name="" id="" class="btn btn-danger btn-lg btn-block col m-2 p-0">
-                                    <i class="fas fa-print"></i>Update
-                                </button>
-                                <button type="button" class="btn btn-danger col m-2 p-0">
+                               
+                                <button type="button" onclick="location.href='{% url 'print_order' order.unique_code %}'" class="btn btn-danger col m-2 p-0">
                                     <i class="fas fa-print"></i>Print
                                 </button>
+                                
                             </div>
                         </td>
                         
@@ -67,7 +80,23 @@
 
     </div>
     
-    
+  
+  
+    <script>
+        function printOrder(unique_code) {
+            console.log('Printing order with unique_code:', unique_code);
+            const printWindow = window.open('', '_blank');
+            printWindow.document.open();
+            printWindow.document.close();
+
+            printWindow.onload = function() {
+                printWindow.print();
+                printWindow.close();
+            };
+        }
+    </script>
+
+
 
 
 

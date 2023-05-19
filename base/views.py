@@ -10,6 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Item,Transporter,CustomUser,Order
 from base.EmailBackEnd import EmailBackEnd
 
+from django.shortcuts import render, get_object_or_404
+from .models import Item
 
 # Create your views here.
 
@@ -53,8 +55,8 @@ def login_view(request):
     
     return render(request, 'login.html')
 
-
-
+def base(request):
+        return render(request, 'base.html')
 
 
 
@@ -96,21 +98,16 @@ def add_transporter_save(request):
                 messages.error(request, "Invalid Method ")
                 return redirect('add_transporter')
         else:
-                first_name = request.POST.get('first_name')
-                last_name = request.POST.get('last_name')
-                username = request.POST.get('username')
-                email = request.POST.get('email')
-                password = request.POST.get('password')
-                address = request.POST.get('address')
-                phone_number = request.POST.get('phone_number')
+                transporter_first_name = request.POST.get('first_name')
+                transporter_last_name = request.POST.get('last_name')
+                transporter_email_address = request.POST.get('email')
+                transporter_address = request.POST.get('address')
+                transporter_phone_number = request.POST.get('phone_number')
                 
 
         try:
-                transporter = Transporter.objects.all()
-                user = CustomUser.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
-                user.transporter.phone_number = phone_number
-                user.transporter.address = address
-                user.save()
+                add_transporter = Transporter(transporter_first_name=transporter_first_name, transporter_last_name=transporter_last_name, transporter_email_address=transporter_email_address,transporter_address=transporter_address,transporter_phone_number = transporter_phone_number)
+                add_transporter.save()
             
                 messages.success(request, "Transporter Added Successfully!")
                 return redirect('add_transporter')
@@ -119,7 +116,7 @@ def add_transporter_save(request):
             messages.error(request, "Failed to Add transporter!")
             return redirect('add_transporter')
     
-def add_order(request): 
+def new_entry(request): 
         transporters = Transporter.objects.all()
 
         items = Item.objects.all()
@@ -127,9 +124,9 @@ def add_order(request):
                 'transporters': transporters,
                 'items': items,
         }    
-        return render(request,'base/add_order.html',context)
+        return render(request,'base/new_entry.html',context)
 
-def add_order_save(request):
+def new_entry_save(request):
         transporters = Transporter.objects.all()
         items = Item.objects.all()
         context = {
@@ -138,33 +135,36 @@ def add_order_save(request):
         }
         if request.method != 'POST':
                 messages.error(request, 'Invalid Method')
-                return redirect('add_order')
+                return redirect('new_entry')
         else:
                 item_id= request.POST.get('item_name')
                 item = Item.objects.get(id=item_id)
 
                 destination = request.POST.get('destination')
-                transporter_id = request.POST.get('transporter')
-                transporter = CustomUser.objects.get(id=transporter_id)
-
+                
+                item_status = request.POST.get('item_status')
                 receiver_first_name = request.POST.get('receiver_first_name')
                 receiver_last_name = request.POST.get('receiver_last_name')
-                receiver_id_number = request.POST.get('receiver_id_number')
+                receiver_phone_number = request.POST.get('receiver_phone_number')
                 receiver_confirmation = request.POST.get('receiver_confirmation')
         try:
-                add_order = Order(item_id=item,destination=destination,transporter_id=transporter,
+                new_entry = Order(item_id=item,destination=destination,item_status=item_status,
                                   receiver_first_name=receiver_first_name,receiver_last_name=receiver_last_name
-                                  ,receiver_id_number=receiver_id_number,receiver_confirmation=receiver_confirmation)
+                                  ,receiver_phone_number=receiver_phone_number,receiver_confirmation=receiver_confirmation)
                 
-                add_order.save()
+                new_entry.save()
                 messages.success(request, "Order Added.")
-                return redirect('add_order')
+                return redirect('new_entry')
         except Exception as e:
                 print(e)
                 messages.error(request, "Failed to Add Order.")
-                return redirect('add_order')
+                return redirect('new_entry')
 
-         
+
+def print_order(request, unique_code):
+    order = get_object_or_404(Order, unique_code=unique_code)
+    return render(request, 'print_order.html', {'order': order})  
+     
 @csrf_exempt
 def check_email_exist(request):
     email = request.POST.get("email")
