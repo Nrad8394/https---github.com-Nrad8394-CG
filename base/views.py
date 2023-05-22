@@ -98,15 +98,14 @@ def add_transporter_save(request):
                 messages.error(request, "Invalid Method ")
                 return redirect('add_transporter')
         else:
-                transporter_first_name = request.POST.get('first_name')
-                transporter_last_name = request.POST.get('last_name')
+                transporter_name = request.POST.get(' transporter_name')
                 transporter_email_address = request.POST.get('email')
                 transporter_address = request.POST.get('address')
                 transporter_phone_number = request.POST.get('phone_number')
                 
 
         try:
-                add_transporter = Transporter(transporter_first_name=transporter_first_name, transporter_last_name=transporter_last_name, transporter_email_address=transporter_email_address,transporter_address=transporter_address,transporter_phone_number = transporter_phone_number)
+                add_transporter = Transporter(transporter_name=transporter_name,transporter_email_address=transporter_email_address,transporter_address=transporter_address,transporter_phone_number = transporter_phone_number)
                 add_transporter.save()
             
                 messages.success(request, "Transporter Added Successfully!")
@@ -127,38 +126,50 @@ def new_entry(request):
         return render(request,'base/new_entry.html',context)
 
 def new_entry_save(request):
-        transporters = Transporter.objects.all()
-        items = Item.objects.all()
-        context = {
-                'transporters': transporters,
-                'items': items,
-        }
-        if request.method != 'POST':
-                messages.error(request, 'Invalid Method')
-                return redirect('new_entry')
-        else:
-                item_id= request.POST.get('item_name')
-                item = Item.objects.get(id=item_id)
-
-                destination = request.POST.get('destination')
-                
-                item_status = request.POST.get('item_status')
-                receiver_first_name = request.POST.get('receiver_first_name')
-                receiver_last_name = request.POST.get('receiver_last_name')
-                receiver_phone_number = request.POST.get('receiver_phone_number')
-                receiver_confirmation = request.POST.get('receiver_confirmation')
+    transporters = Transporter.objects.all()
+    items = Item.objects.all()
+    context = {
+        'transporters': transporters,
+        'items': items,
+    }
+    if request.method != 'POST':
+        messages.error(request, 'Invalid Method')
+        return redirect('new_entry')
+    else:
+        item_id = request.POST.get('item_name')
+        item = Item.objects.get(id=item_id)
+        transporter_id = request.POST.get('transporter_name')
+        destination = request.POST.get('destination')
+        item_status = request.POST.get('item_status')
+        receiver_first_name = request.POST.get('receiver_first_name')
+        receiver_last_name = request.POST.get('receiver_last_name')
+        receiver_phone_number = request.POST.get('receiver_phone_number')
+        receiver_confirmation = request.POST.get('receiver_confirmation')
         try:
-                new_entry = Order(item_id=item,destination=destination,item_status=item_status,
-                                  receiver_first_name=receiver_first_name,receiver_last_name=receiver_last_name
-                                  ,receiver_phone_number=receiver_phone_number,receiver_confirmation=receiver_confirmation)
-                
-                new_entry.save()
-                messages.success(request, "Order Added.")
-                return redirect('new_entry')
+            transporter = Transporter.objects.get(id=transporter_id)
+        except Transporter.DoesNotExist:
+            messages.error(request, "Invalid Transporter")
+            return redirect('new_entry')
+        
+        try:
+            new_entry = Order(
+                item_id=item,
+                destination=destination,
+                item_status=item_status,
+                transporter_id=transporter,
+                receiver_first_name=receiver_first_name,
+                receiver_last_name=receiver_last_name,
+                receiver_phone_number=receiver_phone_number,
+                receiver_confirmation=receiver_confirmation
+            )
+            
+            new_entry.save()
+            messages.success(request, "Order Added.")
+            return redirect('new_entry')
         except Exception as e:
-                print(e)
-                messages.error(request, "Failed to Add Order.")
-                return redirect('new_entry')
+            print(e)
+            messages.error(request, "Failed to Add Order.")
+            return redirect('new_entry')
 
 
 def print_order(request, unique_code):

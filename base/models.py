@@ -28,8 +28,7 @@ class Item(models.Model):
 
 class Transporter(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
-    transporter_first_name = models.CharField(max_length=255,null=True)
-    transporter_last_name = models.CharField(max_length=255,null=True)
+    transporter_name = models.CharField(max_length=255,null=True)
     transporter_email_address = models.CharField(max_length=255, null=True)
     transporter_phone_number = models.IntegerField(default=0)
     transporter_address = models.TextField(null=True)
@@ -37,8 +36,9 @@ class Transporter(models.Model):
 
 class Order(models.Model):
     id = models.AutoField(primary_key=True)
-    item_id = models.ForeignKey(Item, on_delete= models.CASCADE, null=True,default=None)
-    
+    item_id = models.ForeignKey(Item, on_delete= models.CASCADE, null=True, default=None)
+    transporter_id = models.ForeignKey(Transporter, on_delete=models.CASCADE, null=True, default=None)    
+    # transporter_name = models.CharField(max_length=255, null=True) 
     destination = models.CharField(max_length=100)
     receiver_first_name = models.CharField(max_length=255)
     receiver_last_name = models.CharField(max_length=255)
@@ -46,6 +46,7 @@ class Order(models.Model):
     receiver_confirmation = models.BooleanField( null=True)
     objects = models.Manager()
     item_status = models.CharField(max_length=255)
+
 
 
     unique_code = models.CharField(max_length=32, unique=True)

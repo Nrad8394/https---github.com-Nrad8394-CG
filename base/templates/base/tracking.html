@@ -21,6 +21,8 @@
                     <th>Receiver Phone Number</th>
                     <th>Receiver First Name</th>
                     <th>Receiver Last Name</th>
+                    <th>Transporter's Name</th>
+
                     <th>Actions</th>
                     
     
@@ -50,6 +52,9 @@
                         </td>
                         <td>
                             {{ order.receiver_last_name }}
+                        </td>
+                        <td>
+                            {{ order.transporter_id.transporter_name }}
                         </td>
                         
                         

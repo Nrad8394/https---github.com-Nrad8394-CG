@@ -103,9 +103,9 @@
                                     <div class="form-group">
 
                                         <label>Transporter's Name</label>
-                                        <select class="form-control" name="transporter_names">
+                                        <select class="form-control" name="transporter_name">
                                             {% for transporter in transporters %}
-                                                <option value="{{ transporter.id }}">{{ transporter.transporter_first_name }} {{ transporter.transporter_last_name }}</option>
+                                                <option value="{{ transporter.id }}"> {{ transporter.transporter_name }}</option>
                                             {% endfor %}
                                         </select>
                                     </div>

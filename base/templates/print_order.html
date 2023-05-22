@@ -95,7 +95,7 @@
 
             <main style="margin: 20px auto; max-width: 600px; font-size:20px " class="jumbotron  font-bold ">
         
-            <h1 style="font-size: 24px; margin-bottom: 10px;"><strong><i>{{ order.item_id }}</strong></i></h1>
+            <h1 style="font-size: 24px; margin-bottom: 10px; text-decoration: underline"><strong><i>CAR AND GENERAL</strong></i></h1>
             <p><strong>Unique Code:</strong> {{ order.unique_code }}</p>
             <p><strong>Item name:</strong> {{ order.item_id }}</p>
             <p><strong>Item status:</strong> {{ order.item_status }}</p>
@@ -104,21 +104,26 @@
             <p><strong>Receiver's Phone Number: </strong>{{ order.receiver_phone_number }}</p>
             <p><strong>Receiver's First Name:</strong> {{ order.receiver_first_name }}</p>
             <p><strong>Receiver's Last Name:</strong> {{ order.receiver_last_name }}</p>
+            <p><strong>Transporter's Name:</strong> {{ order.transporter_id.transporter_name }}</p>
+
         
         
             </main>
-        
              <script>
                 // Automatically trigger the print dialog when the page loads
                 window.onload = function() {
                     window.print();
                 };
-            </script>  
+            </script>    
         </body>
         <!-- /.content -->
       </div>
       {% block custom_js %}
-        {% endblock custom_js %}
+      <script>
+
+        document.body.style.overflow = 'hidden';
+    </script>
+      {% endblock custom_js %}
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -126,6 +131,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </body>
 </html>
+
 
 
 
