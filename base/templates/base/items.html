@@ -1,0 +1,84 @@
+{% extends 'base.html'%}
+
+{% block main_content %}
+    <body>
+        <div class="container-fluid">
+
+                <form method="GET" action="{% url 'search_item' %}" value="{{request.GET.q}}" id="search-form">
+                  {% csrf_token %}
+                  <div class="input-group d-flex row container m-auto p-2 text-center w-50 float-center" style="display: flex; justify-content: center; align-items: center; padding-bottom: 50px; ">
+
+                    <input type="text" id="search-input" name="q" class="form-control  " placeholder="Enter Unique Code" value="{{request.GET.q}}">
+        
+                    <input class="btn btn-danger " type="submit" name="submit" value="Search"/>
+                 </div> 
+                </form>
+                
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item ID</th>
+                            <th>Item Name</th>
+                            <th>Specifications</th>
+                            <th>Item Status</th>
+                            <th>Action</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+            {% if submitbutton == 'Search' and request.GET.q != '' %}
+                {% if results %}
+            
+                    {% for result in results %}
+                        <form class="" method="post" action="{% url 'new_entry' result.item_id %}">
+                            {% csrf_token %}
+                        <tr>
+                            <td scope="row" name="item_id">{{ result.item_id }}</td>
+                            <td>{{ result.item_name }}</td>
+                            <td>{{ result.specification }}</td>
+                            <td>{{ result.item_status }}</td>
+                            <td>
+                                <button type="submit" class="btn btn-danger">Update</button>
+                            </td>
+                        </tr>
+                        </form>
+                        
+                    {% endfor %}
+            
+                {% else %}
+                    No search results for this query
+             {% endif %}
+            {% endif %}
+                
+                    {% for item in items %}
+                            <form class="" method="post" action="{% url 'new_entry' item.item_id %}">
+                                {% csrf_token %}
+                            <tr>
+                                <td scope="row" name="item_id">{{ item.item_id }}</td>
+                                <td>{{ item.item_name }}</td>
+                                <td>{{ item.specification }}</td>
+                                <td>{{ item.item_status }}</td>
+                                <td>
+                                    <button type="submit" class="btn btn-danger">Update</button>
+                                </td>
+                            </tr>
+                            </form>
+                            {%  endfor %}  
+            </tbody>
+        </table>
+            
+        </div>
+    </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#search-form').on('input', '#search-input', function() {
+            $(this).closest('form').submit();
+        });
+
+        // Add more event listeners for other search input fields and forms
+    });
+</script>
+{% endblock main_content %}
+

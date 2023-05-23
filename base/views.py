@@ -1,9 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
+from django.db.models import Q
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -81,9 +83,9 @@ def add_item_save(request):
         else:
                 item_name = request.POST.get('item_name')
                 specification = request.POST.get('specification')
-                item_id = request.POST.get('item_id')
+                item_status = request.POST.get('item_status')
         try:
-                add_item = Item(item_name=item_name,specification=specification,item_id=item_id)
+                add_item = Item(item_name=item_name,specification=specification,item_status=item_status)
                 add_item.save()
                 messages.success(request, "Item Added.")
                 return redirect('add_item')
@@ -91,6 +93,44 @@ def add_item_save(request):
                 print(e)
                 messages.error(request, "Failed to Add Item.")
                 return redirect('add_item')
+def items(request):
+     items = Item.objects.all()
+     context = {'items': items}
+
+     return render(request, 'base/items.html',context)
+def item_update(request):
+     if request.method != 'POST':
+          messages.error(request, 'Invalid method')
+     else:
+          pass
+
+
+
+def search_item(request):
+    items = Item.objects.all()
+    if request.method == 'GET':
+        query= request.GET.get('q')
+
+        submitbutton= request.GET.get('submit')
+
+        if query is not None:
+            lookups= Q(item_id__icontains=query) | Q(item_name__icontains=query)
+
+            results= Item.objects.filter(lookups).distinct()
+
+            context={'results': results,
+            'submitbutton': submitbutton}
+
+            return render(request, 'base/items.html', context)
+
+        else:
+            return render(request, 'base/items.html')
+
+    else:
+        return render(request, 'base/items.html')
+
+          
+
 def add_transporter(request):
         return render(request,'base/add_transporter.html')        
 def add_transporter_save(request):
@@ -98,14 +138,13 @@ def add_transporter_save(request):
                 messages.error(request, "Invalid Method ")
                 return redirect('add_transporter')
         else:
-                transporter_name = request.POST.get(' transporter_name')
+                transporter_name = request.POST.get('name')
                 transporter_email_address = request.POST.get('email')
                 transporter_address = request.POST.get('address')
-                transporter_phone_number = request.POST.get('phone_number')
                 
 
         try:
-                add_transporter = Transporter(transporter_name=transporter_name,transporter_email_address=transporter_email_address,transporter_address=transporter_address,transporter_phone_number = transporter_phone_number)
+                add_transporter = Transporter(transporter_name=transporter_name,transporter_email_address=transporter_email_address,transporter_address=transporter_address)
                 add_transporter.save()
             
                 messages.success(request, "Transporter Added Successfully!")
@@ -115,17 +154,17 @@ def add_transporter_save(request):
             messages.error(request, "Failed to Add transporter!")
             return redirect('add_transporter')
     
-def new_entry(request): 
+def new_entry(request, item_id): 
         transporters = Transporter.objects.all()
 
-        items = Item.objects.all()
+        item = Item.objects.get(pk=item_id)
         context = {
                 'transporters': transporters,
-                'items': items,
+                'item': item,
         }    
         return render(request,'base/new_entry.html',context)
 
-def new_entry_save(request):
+def new_entry_save(request, item_id):
     transporters = Transporter.objects.all()
     items = Item.objects.all()
     context = {
@@ -134,13 +173,12 @@ def new_entry_save(request):
     }
     if request.method != 'POST':
         messages.error(request, 'Invalid Method')
-        return redirect('new_entry')
+        return redirect(reverse('new_entry', args=[item_id]))
     else:
-        item_id = request.POST.get('item_name')
-        item = Item.objects.get(id=item_id)
+        item = Item.objects.get(item_id=item_id)
         transporter_id = request.POST.get('transporter_name')
         destination = request.POST.get('destination')
-        item_status = request.POST.get('item_status')
+        item_status = item.item_status
         receiver_first_name = request.POST.get('receiver_first_name')
         receiver_last_name = request.POST.get('receiver_last_name')
         receiver_phone_number = request.POST.get('receiver_phone_number')
@@ -149,7 +187,7 @@ def new_entry_save(request):
             transporter = Transporter.objects.get(id=transporter_id)
         except Transporter.DoesNotExist:
             messages.error(request, "Invalid Transporter")
-            return redirect('new_entry')
+            return redirect(reverse('new_entry', args=[item_id]))
         
         try:
             new_entry = Order(
@@ -165,11 +203,11 @@ def new_entry_save(request):
             
             new_entry.save()
             messages.success(request, "Order Added.")
-            return redirect('new_entry')
+            return redirect(reverse('new_entry', args=[item_id]))
         except Exception as e:
             print(e)
             messages.error(request, "Failed to Add Order.")
-            return redirect('new_entry')
+            return redirect(reverse('new_entry', args=[item_id]))
 
 
 def print_order(request, unique_code):

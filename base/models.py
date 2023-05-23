@@ -17,11 +17,16 @@ class CustomUser(AbstractUser):
 
 
 class Item(models.Model):
-    id = models.AutoField(primary_key=True)
     item_name = models.CharField(max_length=100)
     specification = models.TextField()
-    item_id = models.IntegerField(null=True, blank=True,unique=True)
-    objects = models.Manager()
+    
+    item_status = models.CharField(max_length=255 , null=True, blank=True)
+    item_id = models.CharField(max_length=32,primary_key=True, unique=True)
+    def save(self, *args, **kwargs):
+        if not self.item_id:
+            self.item_id = uuid.uuid4().hex[:8]  # Generate a unique 8-character code
+        super().save(*args, **kwargs)
+        objects = models.Manager()
 
     def __str__(self):
         return self.item_name

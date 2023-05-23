@@ -18,7 +18,7 @@
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form role="form" method="POST" action="{% url 'new_entry_save' %}">
+                    <form role="form" method="POST" action="{% url 'new_entry_save' item.item_id %}">
                         {% csrf_token %}
 
                         
@@ -55,18 +55,15 @@
                                     <div class="form-group">
 
                                         <label>Item </label>
-                                        <select class="form-control" name="item_name">
-                                            {% for item in items %}
-                                                <option value="{{ item.id }}">{{ item.item_name }}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <p>{{ item.item_name }}</p>
+                                    
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="form-group">
 
                                         <label>Item Status</label>
-                                        <input type="text" class="form-control" name="item_status" placeholder="Item Status">
+                                        <p>{{ item.item_status }}</p>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -110,16 +107,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group">
-
-                                        <label>Transporter's Phone Number</label>
-                                        <select class="form-control" name="transporter_phone_number">
-                                            {% for transporter in transporters %}
-                                                <option value="{{ transporter.id }}">{{ transporter.transporter_phone_number }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
+                                
                                 </div>
                                 
                             </div>
