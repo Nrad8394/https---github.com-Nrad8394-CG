@@ -15,12 +15,12 @@ class CustomUser(AbstractUser):
 
     
 
-
 class Item(models.Model):
     item_name = models.CharField(max_length=100)
+    item_model = models.CharField(max_length=100, default=None)
     specification = models.TextField()
-    
-    item_status = models.CharField(max_length=255 , null=True, blank=True)
+    serial_number = models.CharField(max_length=100, null=True)
+    item_status = models.CharField(max_length=255 , default=None)
     item_id = models.CharField(max_length=32,primary_key=True, unique=True)
     def save(self, *args, **kwargs):
         if not self.item_id:

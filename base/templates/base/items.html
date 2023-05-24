@@ -20,7 +20,9 @@
                         <tr>
                             <th>Item ID</th>
                             <th>Item Name</th>
+                            <th>Model</th>
                             <th>Specifications</th>
+                            <th>Serial Number</th>
                             <th>Item Status</th>
                             <th>Action</th>
 
@@ -36,7 +38,9 @@
                         <tr>
                             <td scope="row" name="item_id">{{ result.item_id }}</td>
                             <td>{{ result.item_name }}</td>
+                            <td>{{ result.item_model }}</td>
                             <td>{{ result.specification }}</td>
+                            <td>{{ result.serial_number }}</td>
                             <td>{{ result.item_status }}</td>
                             <td>
                                 <button type="submit" class="btn btn-danger">Update</button>
@@ -57,7 +61,9 @@
                             <tr>
                                 <td scope="row" name="item_id">{{ item.item_id }}</td>
                                 <td>{{ item.item_name }}</td>
+                                <td>{{ item.item_model }}</td>
                                 <td>{{ item.specification }}</td>
+                                <td>{{ item.serial_number }}</td>
                                 <td>{{ item.item_status }}</td>
                                 <td>
                                     <button type="submit" class="btn btn-danger">Update</button>

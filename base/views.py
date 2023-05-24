@@ -27,7 +27,7 @@ def doLogin(request):
         if user != None:
             login(request, user)
             #return HttpResponse("Email: "+request.POST.get('email')+ " Password: "+request.POST.get('password'))
-            return redirect('tracker')
+            return redirect('items')
         else:
             messages.error(request, "Invalid Login Credentials!")
             #return HttpResponseRedirect("/")
@@ -82,10 +82,12 @@ def add_item_save(request):
                 return redirect('add_item')
         else:
                 item_name = request.POST.get('item_name')
+                item_model = request.POST.get('item_model')
                 specification = request.POST.get('specification')
+                serial_number = request.POST.get('serial_number')
                 item_status = request.POST.get('item_status')
         try:
-                add_item = Item(item_name=item_name,specification=specification,item_status=item_status)
+                add_item = Item(item_name=item_name,item_model=item_model,specification=specification,serial_number=serial_number,item_status=item_status)
                 add_item.save()
                 messages.success(request, "Item Added.")
                 return redirect('add_item')
