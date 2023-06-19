@@ -11,9 +11,31 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 
 class CustomUser(AbstractUser):
-    pass
-
+    user_type_choice = ((1,'Admin'),(2,'Clerk'),(3,'Customer'))
+    user_type = models.CharField(default=1, choices=user_type_choice ,max_length = 1)
     
+    pass
+ 
+ 
+class Admin(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+    
+class Clerk(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+class Customer(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
 
 class Item(models.Model):
     item_name = models.CharField(max_length=100)
@@ -61,5 +83,32 @@ class Order(models.Model):
             self.unique_code = uuid.uuid4().hex[:8]  # Generate a unique 8-character code
         super().save(*args, **kwargs)
     
+#Creating Django Signals
+
+# It's like trigger in database. It will run only when Data is Added in CustomUser model
+
+@receiver(post_save, sender=CustomUser)
+# Now Creating a Function which will automatically insert data in AdminManager, Clerk or Supplier
+def create_user_profile(sender, instance, created, **kwargs):
+    # if Created is true (Means Data Inserted)
+    if created:
+        # Check the user_type and insert the data in respective tables
+        if instance.user_type == 1:
+            Admin.objects.create(user=instance)
+        if instance.user_type == 2:
+            Clerk.objects.create(user=instance)
+        if instance.user_type == 3:
+            Customer.objects.create(user=instance)
+
+@receiver(post_save, sender=CustomUser)
+def save_user_profile(sender, instance, **kwargs):
+    if instance.user_type == 1:
+        instance.admin.save()
+    if instance.user_type == 2:
+        instance.clerk.save()
+    if instance.user_type == 3:
+        instance.customer.save()
+    
+
 
            

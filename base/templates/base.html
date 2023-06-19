@@ -84,6 +84,17 @@
 
             </div>
           </div>
+          <div class="profile float-end mr-5 ">
+              <div class="dropdown open fa fa-user-circle">
+                <a class="btn btn-transparent p-0 m-0 dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    {{user.username}}
+                <div class="dropdown-menu" aria-labelledby="triggerId">
+                  <a class="dropdown-item" href="{% url 'profile' %}">Profile</a>
+                  <a class="dropdown-item disabled" href="#">Disabled action</a>
+                </div>
+              </div>
+            </div>
         </div>
         <div class="content-wrapper">
 
